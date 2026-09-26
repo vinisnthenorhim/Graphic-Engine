@@ -6,13 +6,13 @@
 class Game
 {
     public:
-        // Game();
+        Game(Renderer& renderer);
         void render(Renderer& renderer);
         void event(const SDL_Event* event);
         void update();
 
     private:
-    RenderObject renderObject;
+        World world;
 };
 
 #endif

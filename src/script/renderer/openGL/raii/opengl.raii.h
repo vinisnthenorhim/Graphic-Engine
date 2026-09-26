@@ -12,11 +12,11 @@ class VBO
     public:
         VBO () {    glGenBuffers   (1, &VBOid  );    }
         ~VBO() {    glDeleteBuffers(1, &VBOid  );    }
-        void bind()  {glBindBuffer(GL_ARRAY_BUFFER, VBOid);}
+        void bind() const {glBindBuffer(GL_ARRAY_BUFFER, VBOid);}
         template <typename T> 
         void data(const std::vector<T>& vertices) 
         {
-            glBindBuffer(GL_ARRAY_BUFFER, VBOid);
+            bind();
             glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(T)), vertices.data(), GL_STATIC_DRAW);
         }
         GLuint id() const { return VBOid; }
@@ -30,11 +30,11 @@ class EBO
     public:
         EBO () {    glGenBuffers   (1, &EBOid  );    }
         ~EBO() {    glDeleteBuffers(1, &EBOid  );    }
-        void bind() {glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOid);}
+        void bind() const {glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOid);}
         template <typename T> 
-        void data(const T& vertices) 
+        void data(const std::vector<T>& vertices) 
         {
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOid);
+            bind();
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(T)), vertices.data(), GL_STATIC_DRAW);
         }
         GLuint id() const { return EBOid; }
@@ -48,7 +48,13 @@ class VAO
     public:
         VAO () {    glGenVertexArrays   (1, &VAOid  );    }
         ~VAO() {    glDeleteVertexArrays(1, &VAOid  );    }
-        void bind() {glBindVertexArray(VAOid);}
+        void bind() const {glBindVertexArray(VAOid);}
+        void linkAttrib(GLuint index, GLint size, GLenum type, GLsizei stride, const void* offset)
+        {
+            bind();
+            glVertexAttribPointer(index, size, type, GL_FALSE, stride, offset);
+            glEnableVertexAttribArray(index);
+        }
         GLuint id() const { return VAOid;}
         VAO(const VAO&) = delete;
         VAO& operator=(const VAO&) = delete;

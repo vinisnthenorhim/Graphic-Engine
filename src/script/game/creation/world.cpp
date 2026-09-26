@@ -1,5 +1,7 @@
 #include "_world.h"
 
+const RenderStoreResource World::rendererResourceStore() const { return {&type, &visible}; }; 
+
 uint32_t World::createObject(Type objectType)
 {
     id++;
@@ -19,7 +21,6 @@ uint32_t World::createObject(Type objectType)
     rotationZ.push_back(0.0f);
 
     visible.push_back(true);
-    hasBuffer.push_back(false);
     exist.push_back(true);
 
     return id;

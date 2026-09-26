@@ -1,17 +1,16 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <openGL/_core.h>
+#include <openGL/_GLcore.h>
 
 class Renderer
 {
     public:
         Renderer(SDL_Window* window);
-
-
         ~Renderer();
+        void resourceDataLoad(const RenderStoreResource resource);
 
-        void screenUpdate();
+        void screenUpdate(const SDL_Event* event);
         bool render();
 
     private:

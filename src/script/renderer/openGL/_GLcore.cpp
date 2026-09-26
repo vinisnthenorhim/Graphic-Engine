@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "_core.h"
+#include "_GLcore.h"
 
 GLRenderer::GLRenderer(SDL_Window* window)
 :context(window), projection(window)
@@ -16,6 +16,10 @@ GLRenderer::~GLRenderer()
 void GLRenderer::screenUpdate()
 {
     projection.updateProjection();
+}
+void GLRenderer::resourceDataLoad(const RenderStoreResource resource)
+{
+    objectRender.resourceLoad(resource);
 }
 
 

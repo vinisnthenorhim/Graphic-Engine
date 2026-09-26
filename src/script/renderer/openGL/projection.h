@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_clip_space.hpp> 
 #include <glm/gtc/type_ptr.hpp>
-#include <script/renderer/openGL/opengl.raii.h>
+#include <openGL/raii/opengl.raii.h>
 
 class Projection
 {

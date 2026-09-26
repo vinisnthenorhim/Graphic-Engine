@@ -4,7 +4,7 @@ Engine::Engine()
 {
     window = new Window();
     renderer = new Renderer(window->getWindowFirst());
-    game = new Game();
+    game = new Game(*renderer);
 
 }
 
@@ -13,13 +13,11 @@ Engine::Engine()
 bool Engine::event(const SDL_Event* event)
 {
 
-    if (event->type == SDL_EVENT_WINDOW_RESIZED)
-    {
-        renderer->screenUpdate();
-    }
-    game->event(event);
+  renderer->screenUpdate(event);
+    
+  game->event(event);
 
-    return window->event(event);
+  return window->event(event);
 }
 
 bool Engine::render()

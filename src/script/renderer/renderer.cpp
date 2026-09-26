@@ -11,13 +11,20 @@ Renderer::~Renderer()
 {
 
 }
-
-void Renderer::screenUpdate()
+void Renderer::screenUpdate(const SDL_Event* event)
 {
+  if (event->type == SDL_EVENT_WINDOW_RESIZED)
+  {
     GlRenderer.screenUpdate();
+  }
+}
+void Renderer::resourceDataLoad(const RenderStoreResource resource)
+{
+  GlRenderer.resourceDataLoad(resource);
 }
 
 bool Renderer::render()
 {
-    return GlRenderer.render();
+  // return GlRenderer.render();
+  return true;
 }

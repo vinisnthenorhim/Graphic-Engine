@@ -4,12 +4,16 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include <enum/enum.h>
+#include <renderObject/enum/enum.h>
+#include <renderObject/enum/struct.h>
 
 class World
 {
     public:
+        const RenderStoreResource rendererResourceStore() const; 
         uint32_t createObject(Type objectType);
+
+        void updateData();
 
     private:
         uint32_t id;
@@ -28,7 +32,6 @@ class World
         std::vector<float> rotationZ    ;
 
         std::vector<bool> visible       ;
-        std::vector<bool> hasBuffer     ;
         std::vector<bool> exist         ;
 
 };
