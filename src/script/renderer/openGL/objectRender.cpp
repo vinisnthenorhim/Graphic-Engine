@@ -28,29 +28,12 @@ void ObjectRender::resourceLoad(const RenderStoreResource resource)
   vao.linkAttrib(0, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, position));
   vao.linkAttrib(1, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
-  std::cout << "[OPENGL]"  << " buffer created " << '\n';  
+  std::cout << "[OPENGL]"  << " Buffer created " << '\n';  
 }
 
 
-// bool ObjectRender::render()
-// {
- 
-//     if(renderData.renderState.visible)
-//     {
-//         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//         glClear(GL_COLOR_BUFFER_BIT);
-//         vaoPlayer.bind();
-//         glDrawElements(
-//             GL_TRIANGLES,
-//             6,
-//             GL_UNSIGNED_INT,
-//             nullptr
-//         );
-//     }
-//     else
-//     {
-//         glClearColor(0.3f, 0.6f, 1.0f, 1.0f);
-//         glClear(GL_COLOR_BUFFER_BIT);
-//     }
-//     return  true;
-// }
+void ObjectRender::render()
+{
+  
+
+}

@@ -112,7 +112,7 @@ class ShaderProgram
         {
             program = glCreateProgram();
             glAttachShader(program, vertex->shader);
-            if ( fragment )glAttachShader(program, fragment->shader);
+            if ( fragment ) glAttachShader(program, fragment->shader);
             glLinkProgram(program);
         }
         ~ShaderProgram() {  glDeleteProgram(program);  }
