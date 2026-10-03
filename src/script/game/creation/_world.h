@@ -14,8 +14,10 @@ class World
   public:
     World();
     const RenderStoreResource rendererResourceStore() const; 
+    const std::vector<bool>& dirtyObject() const { return dirty;};
     uint32_t createObject(Type objectType);
-    void velocityUpdate( uint32_t id, float speedX, float speedY );
+    float velocityUpdate( uint32_t id );
+    // void 
 
     void secondPerFrame();
 
@@ -26,7 +28,8 @@ class World
     float holdtime = 0.0f;
 
     uint32_t id = 0;
-    std::vector<Type> type;
+    std::vector<Type> type          ;
+    std::vector<bool> dirty         ;
 
     std::vector<float> positionX    ;
     std::vector<float> positionY    ;
@@ -43,6 +46,9 @@ class World
     std::vector<float> velocityX    ;
     std::vector<float> velocityY    ;
     std::vector<float> velocityZ    ;
+
+    std::vector<float> speedX       ;
+    std::vector<float> speedY       ;
 
     std::vector<bool> visible       ;
     std::vector<bool> exist         ;

@@ -21,6 +21,7 @@ bool WindowF::create(const char* title)
     this->width = width;
     this->height = height;
 
+    SDL_GL_SetSwapInterval(1);
     
     return window != nullptr ;    
 }

@@ -25,6 +25,6 @@ void Renderer::resourceDataLoad(const RenderStoreResource resource)
 
 bool Renderer::render()
 {
-  // return GlRenderer.render();
+  GlRenderer.render();
   return true;
 }

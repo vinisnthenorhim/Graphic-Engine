@@ -13,8 +13,6 @@ Window::Window()
 
 bool Window::event(const SDL_Event* event)
 {
-    
-
     return WindowFirst->WindowEventHandler(event);
 }
 

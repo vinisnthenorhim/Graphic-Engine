@@ -49,6 +49,7 @@ class VAO
         VAO () {    glGenVertexArrays   (1, &VAOid  );    }
         ~VAO() {    glDeleteVertexArrays(1, &VAOid  );    }
         void bind() const {glBindVertexArray(VAOid);}
+        void unbind() const { glBindVertexArray(0); }
         void linkAttrib(GLuint index, GLint size, GLenum type, GLsizei stride, const void* offset)
         {
             bind();
@@ -108,17 +109,37 @@ class ShaderProgram
 {
     public:
         GLuint program;
-        ShaderProgram( const Shader* vertex, const Shader* fragment = nullptr)
+        ShaderProgram(GLenum type, const char* path)
         {
-            program = glCreateProgram();
-            glAttachShader(program, vertex->shader);
-            if ( fragment ) glAttachShader(program, fragment->shader);
-            glLinkProgram(program);
+          Shader shader(type, path);
+          link(&shader, nullptr);
+        }
+        ShaderProgram(const char* vertPath, const char* fragPath)
+        {
+          Shader vertShader(GL_VERTEX_SHADER, vertPath);
+          Shader fragShader(GL_FRAGMENT_SHADER, fragPath);
+          link(&vertShader, &fragShader);
         }
         ~ShaderProgram() {  glDeleteProgram(program);  }
         ShaderProgram(const ShaderProgram&) = delete;
         ShaderProgram& operator=(const ShaderProgram&) = delete;
         void bind()  {  glUseProgram(program); }
+    private:
+        void link( const Shader* vertex, const Shader* fragment)
+        {
+            program = glCreateProgram();
+            glAttachShader(program, vertex->shader);
+            if ( fragment ) glAttachShader(program, fragment->shader);
+            glLinkProgram(program);
+            GLint success;
+            glGetProgramiv(program, GL_LINK_STATUS, &success);
+            if (!success)
+            {
+                char infoLog[512];
+                glGetProgramInfoLog(program, 512, NULL, infoLog);
+                std::cout << "[SHADER LINK ERROR] " << infoLog << "\n";
+            }
+        }
 };
 
 class Texture

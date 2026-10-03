@@ -7,22 +7,36 @@
 #include "_GLcore.h"
 
 GLRenderer::GLRenderer(SDL_Window* window)
-:context(window), projection(window)
-{}
+:context(window),program("shaders/triangle.vert", "shaders/triangle.frag"), projection(window)
+{
+  program.bind();
+  projection.updateProjection(program.program);  
+  pastTime = SDL_GetTicks()/1000;
+}
 
 GLRenderer::~GLRenderer()
 {}
 
 void GLRenderer::screenUpdate()
 {
-    projection.updateProjection();
+  update = true;
+
 }
 void GLRenderer::resourceDataLoad(const RenderStoreResource resource)
 {
-    objectRender.resourceLoad(resource);
+  objectRender.resourceLoad(resource);
 }
 
-
-
-
-
+void GLRenderer::render()
+{
+  Uint64 currentTime = SDL_GetTicks()/ 1000;
+  if(update && (currentTime - pastTime) >= delay)
+  {
+    program.bind();
+    projection.updateProjection(program.program);
+    update = false;
+    pastTime = currentTime;
+  }
+  program.bind();
+  objectRender.render();
+}

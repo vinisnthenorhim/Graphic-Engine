@@ -10,22 +10,26 @@
 
 class GLRenderer
 {
-    public:
-        GLRenderer(SDL_Window* window);
-        ~GLRenderer();
-        void resourceDataLoad(const RenderStoreResource resource);
-        void screenUpdate();
-        // bool render();
-    private:
+  public:
+    GLRenderer(SDL_Window* window);
+    ~GLRenderer();
+    void resourceDataLoad(const RenderStoreResource resource);
+    void screenUpdate();
+    void render();
+  private:
 
-        GlContext context;
-        Projection projection;
-        ObjectRender objectRender;
+    GlContext context;
+    ShaderProgram program;
+    Projection projection;
+    ObjectRender objectRender;
 
-        VBO vboPlayer;
-        VAO vaoPlayer;
-        EBO eboPlayer;
-        bool create = false;
+    bool update = false;
+    Uint64 pastTime;
+    const float delay = 0.3;
+
+    VBO vboPlayer;
+    VAO vaoPlayer;
+    EBO eboPlayer;
 
 
     // std::vector<glm::vec3> vertices;

@@ -12,18 +12,18 @@
 
 class Engine
 {
-    public:
-        Engine();
-        
-        bool event  (const SDL_Event* event);
-        bool render ();
+  public:
+    Engine();
+    
+    bool event  (const SDL_Event* event);
+    bool render ();
 
-        ~Engine();
+    ~Engine();
 
-    private:
-        Window* window = nullptr;
-        Renderer* renderer = nullptr;
-        Game* game = nullptr;
+  private:
+    Window* window = nullptr;
+    Renderer* renderer = nullptr;
+    Game* game = nullptr;
 
 };
 

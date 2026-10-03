@@ -15,7 +15,16 @@ struct DefaultMeshObject
     };
     static inline std::vector<uint32_t> indices =
     { 0, 1, 2, 0, 2, 3};
+
 };
+std::vector<glm::vec3> inst =
+{
+    {0.0f, 0.0f, 0.0f},   // instance 0: at origin
+    {200.0f, 0.0f, 0.0f},   // instance 1: 2 units to the right
+    {-200.0f, 0.0f, 0.0f}   // instance 2: 2 units to the left
+};
+
+
 
 void ObjectRender::resourceLoad(const RenderStoreResource resource)
 {
@@ -23,17 +32,35 @@ void ObjectRender::resourceLoad(const RenderStoreResource resource)
   this->visible = resource.visible;
   std::cout << "[OPENGL]"  << " Resource Load " << '\n';  
 
-  vbo.data(DefaultMeshObject::vertex);
-  ebo.data(DefaultMeshObject::indices);
-  vao.linkAttrib(0, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, position));
-  vao.linkAttrib(1, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+    vao.bind();                              // ← ADD THIS FIRST, explicitly
 
-  std::cout << "[OPENGL]"  << " Buffer created " << '\n';  
+    vbo.bind();
+    vbo.data(DefaultMeshObject::vertex);
+    vao.linkAttrib(0, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    vao.linkAttrib(1, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
+    instanceBuffer.bind();
+    instanceBuffer.data(inst);
+    vao.linkAttrib(2, 3, GL_FLOAT, sizeof(glm::vec3), (void*)0);
+    glVertexAttribDivisor(2, 1);
+
+    ebo.bind();
+    ebo.data(DefaultMeshObject::indices);    // ← now binds EBO *while VAO is active* — gets recorded correctly
+
+    vao.unbind();
+  std::cout << "[OPENGL]"  << " Buffer created " << '\n'; 
+
+
+
+
 }
 
 
 void ObjectRender::render()
 {
   
+    vao.bind();                 
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, 3);
+    vao.unbind();
 
 }

@@ -2,9 +2,9 @@
 
 Engine::Engine()
 {
-    window = new Window();
-    renderer = new Renderer(window->getWindowFirst());
-    game = new Game(*renderer);
+  window = new Window();
+  renderer = new Renderer(window->getWindowFirst());
+  game = new Game(*renderer);
 
 }
 
@@ -22,19 +22,20 @@ bool Engine::event(const SDL_Event* event)
 
 bool Engine::render()
 {
-    game->render(*renderer);
-    SDL_GL_SwapWindow(window->getWindowFirst());
-    return true;
+  game->render(*renderer);
+  renderer->render();
+  SDL_GL_SwapWindow(window->getWindowFirst());
+  return true;
 }
 
 
 
 Engine::~Engine()
 {
-    delete game;
-    game = nullptr;
-    delete renderer;
-    renderer = nullptr;
-    delete window;
-    window = nullptr;
+  delete game;
+  game = nullptr;
+  delete renderer;
+  renderer = nullptr;
+  delete window;
+  window = nullptr;
 }

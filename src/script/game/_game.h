@@ -5,14 +5,15 @@
 #include <creation/_world.h>
 class Game
 {
-    public:
-        Game(Renderer& renderer);
-        void render(Renderer& renderer);
-        void event(const SDL_Event* event);
-        void update();
+  public:
+    Game(Renderer& renderer);
+    void render(Renderer& renderer);
+    void event(const SDL_Event* event);
+    void update();
 
-    private:
-        World world;
+  private:
+    // bool update = false;
+    World world;
 };
 
 #endif
