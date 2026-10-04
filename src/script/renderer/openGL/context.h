@@ -17,7 +17,6 @@ class GlContext
   }
   private:
     SDL_GLContext context;
-
 };
 
 #endif

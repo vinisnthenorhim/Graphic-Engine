@@ -3,32 +3,45 @@
 #include "enum.h"
 #include <glm/glm.hpp>
 
-
-
-struct RenderState
-{
-    bool& visible;
-    bool hasBuffer = false;
-};
-
-
-struct MaterialHandle
-{
-
-};
-
-
-struct Transform
-{
-    glm::vec3 position;
-    glm::vec3 rotation;
-    glm::vec3 scale;
-};
-
 struct RenderStoreResource
 {
-    const std::vector<Type>* type;
-    const std::vector<bool>* visible;
+  const std::vector<Type>* type;
+  const std::vector<bool>* visible;
+
+  const std::vector<float>* speedX       ;
+  const std::vector<float>* speedY       ;
+    
+  const std::vector<float>* positionX    ;
+  const std::vector<float>* positionY    ;
+  const std::vector<float>* positionZ    ;
+  
+  const std::vector<float>* scaleX       ;
+  const std::vector<float>* scaleY       ;
+  const std::vector<float>* scaleZ       ;
+
+  const std::vector<float>* rotationX    ;
+  const std::vector<float>* rotationY    ;
+  const std::vector<float>* rotationZ    ;
 };
 
+struct RenderObjectPosition
+{
+  std::vector<float>* positionX    ;
+  std::vector<float>* positionY    ;
+  std::vector<float>* positionZ    ;
+  
+  std::vector<float>* scaleX       ;
+  std::vector<float>* scaleY       ;
+  std::vector<float>* scaleZ       ;
+
+  std::vector<float>* rotationX    ;
+  std::vector<float>* rotationY    ;
+  std::vector<float>* rotationZ    ;
+};
+struct RenderVelocity
+{
+  std::vector<float>* velocityX    ;
+  std::vector<float>* velocityY    ;
+  std::vector<float>* velocityZ    ;
+};
 #endif

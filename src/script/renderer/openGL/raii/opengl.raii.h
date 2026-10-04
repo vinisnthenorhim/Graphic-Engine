@@ -62,7 +62,32 @@ class VAO
     private:
         GLuint VAOid;
 };
-
+class SSBO
+{
+    public:
+        SSBO () {    glGenBuffers   (1, &SSBOid  );    }
+        ~SSBO() {    glDeleteBuffers(1, &SSBOid  );    }
+        void bind() const {glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOid);}
+        template <typename T> 
+        void data(const std::vector<T>& vertices, GLuint binding) 
+        {
+            bind();
+            glBufferData(GL_SHADER_STORAGE_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(T)), vertices.data(), GL_STATIC_DRAW);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, &SSBOid);
+        }
+        template <typename T> 
+        void updateData(const std::vector<T>& vertices)
+        {
+          bind();
+          glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, static_cast<GLsizeiptr>(vertices.size() * sizeof(T)), vertices.data())
+        }
+        GLuint id() const { return SSBOid; }
+        SSBO(const SSBO&) = delete;
+        SSBO& operator=(const SSBO&) = delete;
+    private:
+        GLuint SSBOid;
+        GLuint binding;
+};
 class Framebuffer
 {
     public:
@@ -123,6 +148,43 @@ class ShaderProgram
         ~ShaderProgram() {  glDeleteProgram(program);  }
         ShaderProgram(const ShaderProgram&) = delete;
         ShaderProgram& operator=(const ShaderProgram&) = delete;
+        void bind()  {  glUseProgram(program); }
+    private:
+        void link( const Shader* vertex, const Shader* fragment)
+        {
+            program = glCreateProgram();
+            glAttachShader(program, vertex->shader);
+            if ( fragment ) glAttachShader(program, fragment->shader);
+            glLinkProgram(program);
+            GLint success;
+            glGetProgramiv(program, GL_LINK_STATUS, &success);
+            if (!success)
+            {
+                char infoLog[512];
+                glGetProgramInfoLog(program, 512, NULL, infoLog);
+                std::cout << "[SHADER LINK ERROR] " << infoLog << "\n";
+            }
+        }
+};
+
+class ComputeProgram
+{
+    public:
+        GLuint program;
+        ComputeProgram(GLenum type, const char* path)
+        {
+          Shader shader(type, path);
+          link(&shader, nullptr);
+        }
+        ComputeProgram(const char* vertPath, const char* fragPath)
+        {
+          Shader vertShader(GL_VERTEX_SHADER, vertPath);
+          Shader fragShader(GL_FRAGMENT_SHADER, fragPath);
+          link(&vertShader, &fragShader);
+        }
+        ~ComputeProgram() {  glDeleteProgram(program);  }
+        ComputeProgram(const ComputeProgram&) = delete;
+        ComputeProgram& operator=(const ComputeProgram&) = delete;
         void bind()  {  glUseProgram(program); }
     private:
         void link( const Shader* vertex, const Shader* fragment)

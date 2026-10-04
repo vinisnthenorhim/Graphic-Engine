@@ -14,9 +14,11 @@ class World
   public:
     World();
     const RenderStoreResource rendererResourceStore() const; 
+    const RenderObjectPosition readPosition() const;
+    RenderObjectPosition savePosition() ;
     const std::vector<bool>& dirtyObject() const { return dirty;};
     uint32_t createObject(Type objectType);
-    float velocityUpdate( uint32_t id );
+    void velocityUpdate();
     // void 
 
     void secondPerFrame();

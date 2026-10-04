@@ -9,7 +9,41 @@ World::World()
   std::cout << std::fixed << std::setprecision(6);
 }
 
-const RenderStoreResource World::rendererResourceStore() const { return {&type, &visible}; }; 
+const RenderStoreResource World::rendererResourceStore() const 
+{ 
+  return 
+  { 
+    &type, 
+    &visible,
+    &speedX, 
+    &speedY,
+    &positionX,
+    &positionY,
+    &positionZ,
+    &scaleX,
+    &scaleY,
+    &scaleZ,    
+    &rotationX,
+    &rotationY,
+    &rotationZ,
+  }; 
+}; 
+
+RenderObjectPosition World::savePosition()
+{
+  return 
+  { 
+    &positionX,
+    &positionY,
+    &positionZ,
+    &scaleX,
+    &scaleY,
+    &scaleZ,    
+    &rotationX,
+    &rotationY,
+    &rotationZ,
+  }; 
+}
 
 uint32_t World::createObject(Type objectType)
 {
@@ -54,19 +88,46 @@ void World::secondPerFrame()
 
 
 
-float World::velocityUpdate( uint32_t id )
+void World::velocityUpdate( )
 {
-  const bool* keyboardState = SDL_GetKeyboardState(NULL);
-  if(keyboardState[SDL_SCANCODE_A])
+  int playerId = -1; 
+  const int size = exist.size();
+  for (int a = 0; a < size; a++)
   {
-    dirty[id] = true;
-    holdtime += secondFrame;
-    std::cout << "Hold Time is: " << holdtime << 's' << '\n';
-    return secondFrame;
+    if (type[a] == Type::Player)
+    {
+      playerId = a;
+      break;
+    }
   }
-  return 0;
-  // else if (event->type == SDL_EVENT_KEY_UP)
-  // {
-  //   holdtime = 0;
-  // }
+
+  if (playerId == -1) return; 
+
+  const bool* keyboardState = SDL_GetKeyboardState(NULL);
+
+  struct KeyBinding { SDL_Scancode key; std::vector<float>& axis; float sign; float& heldTime; };
+
+  static float holdA = 0.0f, holdD = 0.0f, holdW = 0.0f, holdS = 0.0f;
+
+  KeyBinding bindings[] = {
+    { SDL_SCANCODE_A, velocityX, -1.0f, holdA },
+    { SDL_SCANCODE_D, velocityX, +1.0f, holdD },
+    { SDL_SCANCODE_W, velocityY, +1.0f, holdW },
+    { SDL_SCANCODE_S, velocityY, -1.0f, holdS },
+  };
+
+  for (auto& b : bindings)
+  {
+    if (keyboardState[b.key])
+    {
+      dirty[playerId] = true;
+      b.heldTime += secondFrame;
+      b.axis[playerId] = b.sign * b.heldTime;
+      std::cout << velocityX[playerId] << '\t' << velocityY[playerId] << '\n';
+    }
+    else
+    {
+      b.heldTime = 0.0f; 
+    }
+  }
 }

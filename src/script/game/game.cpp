@@ -10,19 +10,16 @@ void Game::render(Renderer& renderer)
 {
 
   world.secondPerFrame();
-  const int& size = world.dirtyObject().size();
-  for(int a = 0; a < size; a++)
-  {
-    if (world.dirtyObject()[a])
-    {
-      renderer.render();
-    }
-  }
-  const bool* keyboardState = SDL_GetKeyboardState(NULL);
-  if (keyboardState[SDL_SCANCODE_A])
-  {
-    std::cout << "Hold Time is: " << world.velocityUpdate(0) << 's' << '\n';
-  }
+  // const int& size = world.dirtyObject().size();
+  // for(int a = 0; a < size; a++)
+  // {
+  //   if (world.dirtyObject()[a])
+  //   {
+  //     renderer.render();
+  //   }
+  // }
+  // const bool* keyboardState = SDL_GetKeyboardState(NULL);
+  world.velocityUpdate();
 
 }
 

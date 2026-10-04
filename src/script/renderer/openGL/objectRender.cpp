@@ -28,39 +28,44 @@ std::vector<glm::vec3> inst =
 
 void ObjectRender::resourceLoad(const RenderStoreResource resource)
 {
-  this->type = resource.type;
-  this->visible = resource.visible;
+  this->type      = resource.type     ;
+  this->visible   = resource.visible  ;
+  this->positionX = resource.positionX;
+  this->positionY = resource.positionY;
+  this->positionZ = resource.positionZ;
+  this->scaleX    = resource.scaleX   ;
+  this->scaleY    = resource.scaleY   ;
+  this->scaleZ    = resource.scaleZ   ;
+  this->rotationX = resource.rotationX;
+  this->rotationY = resource.rotationY;
+  this->rotationZ = resource.rotationZ;
+
   std::cout << "[OPENGL]"  << " Resource Load " << '\n';  
 
-    vao.bind();                              // ← ADD THIS FIRST, explicitly
+    vao.bind();                             
 
-    vbo.bind();
     vbo.data(DefaultMeshObject::vertex);
     vao.linkAttrib(0, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, position));
     vao.linkAttrib(1, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 
-    instanceBuffer.bind();
     instanceBuffer.data(inst);
     vao.linkAttrib(2, 3, GL_FLOAT, sizeof(glm::vec3), (void*)0);
     glVertexAttribDivisor(2, 1);
 
     ebo.bind();
-    ebo.data(DefaultMeshObject::indices);    // ← now binds EBO *while VAO is active* — gets recorded correctly
+    ebo.data(DefaultMeshObject::indices);   
 
     vao.unbind();
+
   std::cout << "[OPENGL]"  << " Buffer created " << '\n'; 
-
-
-
-
 }
 
 
 void ObjectRender::render()
 {
   
-    vao.bind();                 
-    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, 3);
-    vao.unbind();
+  vao.bind();                 
+  glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, 3);
+  vao.unbind();
 
 }
