@@ -68,14 +68,22 @@ class SSBO
     SSBO () {    glGenBuffers   (1, &SSBOid  );    }
     ~SSBO() {    glDeleteBuffers(1, &SSBOid  );    }
     void bind() const {glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBOid);}
-    template <typename T> 
-    void data(const std::vector<T>& vertices, GLuint binding) 
+    template <typename T>
+    void data(const std::vector<T>& vertices, GLuint bindingPoint, GLenum usage = GL_DYNAMIC_DRAW)
     {
-      this->binding = binding;
+      binding  = bindingPoint;
       lastSize = static_cast<GLsizeiptr>(vertices.size() * sizeof(T));
       bind();
-      glBufferData(GL_SHADER_STORAGE_BUFFER, lastSize, vertices.data(), GL_DYNAMIC_DRAW);
-      glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, &SSBOid);
+      glBufferData(GL_SHADER_STORAGE_BUFFER, lastSize, vertices.data(), usage);
+      glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, SSBOid);
+    }
+    void data(GLsizeiptr bytes, GLuint bindingPoint, GLenum usage = GL_DYNAMIC_COPY)
+    {
+      binding  = bindingPoint;
+      lastSize = bytes;
+      bind();
+      glBufferData(GL_SHADER_STORAGE_BUFFER, bytes, nullptr, usage);
+      glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, SSBOid);
     }
     template <typename T> 
     void updateData(const std::vector<T>& vertices)
@@ -94,6 +102,12 @@ class SSBO
         bind();
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, currentSize, vertices.data());
       }
+    }
+    void clear()
+    {
+      bind();
+      GLuint zero = 0;
+      glClearBufferData(GL_SHADER_STORAGE_BUFFER, GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, &zero);
     }
     static void barrier() { glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT); }
     GLuint id() const { return SSBOid; }
