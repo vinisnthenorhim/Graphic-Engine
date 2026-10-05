@@ -9,7 +9,7 @@ World::World()
   std::cout << std::fixed << std::setprecision(6);
 }
 
-const RenderStoreResource World::rendererResourceStore() const 
+const RenderStoreResource World::readData() const 
 { 
   return 
   { 
@@ -43,6 +43,15 @@ RenderObjectPosition World::savePosition()
     &rotationY,
     &rotationZ,
   }; 
+}
+RenderVelocity World::getVelocity()
+{
+  return
+  {
+    &velocityX,
+    &velocityY,
+    &velocityZ
+  };
 }
 
 uint32_t World::createObject(Type objectType)
@@ -105,29 +114,51 @@ void World::velocityUpdate( )
 
   const bool* keyboardState = SDL_GetKeyboardState(NULL);
 
-  struct KeyBinding { SDL_Scancode key; std::vector<float>& axis; float sign; float& heldTime; };
+  int8_t axisX = 0;
+  int8_t axisY = 0;
 
-  static float holdA = 0.0f, holdD = 0.0f, holdW = 0.0f, holdS = 0.0f;
+  bool keyA = keyboardState[SDL_SCANCODE_A];
+  bool keyD = keyboardState[SDL_SCANCODE_D];
+  bool keyW = keyboardState[SDL_SCANCODE_W];
+  bool keyS = keyboardState[SDL_SCANCODE_S];
 
-  KeyBinding bindings[] = {
-    { SDL_SCANCODE_A, velocityX, -1.0f, holdA },
-    { SDL_SCANCODE_D, velocityX, +1.0f, holdD },
-    { SDL_SCANCODE_W, velocityY, +1.0f, holdW },
-    { SDL_SCANCODE_S, velocityY, -1.0f, holdS },
-  };
+  if      (keyA && !keyD) lastAxisX = -1;
+  else if (!keyA && keyD) lastAxisX =  1;
 
-  for (auto& b : bindings)
+  if      (keyS && !keyW) lastAxisY = -1;
+  else if (!keyS && keyW) lastAxisY =  1;
+
+  if (keyA && keyD)   axisX = -lastAxisX;
+  else if (keyA)      axisX = -1;
+  else if (keyD)      axisX =  1;
+  if (!keyA && !keyD) axisX =  0;
+
+  if (keyS && keyW)   axisY = -lastAxisY;
+  else if (keyS)      axisY = -1;
+  else if (keyW)      axisY =  1;
+  if (!keyS && !keyW) axisY =  0;
+
+  const float length = std::sqrt(float( axisX * axisX + axisY * axisY));
+
+  const float newVelocityX = length > 0 ? axisX / length : 0.0f;
+  const float newVelocityY = length > 0 ? axisY / length : 0.0f;
+
+  const float dirX = newVelocityX * speedX[playerId];
+  const float dirY = newVelocityY * speedY[playerId];
+
+  if (velocityX[playerId] != newVelocityX || velocityY[playerId] != newVelocityY || velocityX[playerId] != 0 || velocityY[playerId] != 0)
   {
-    if (keyboardState[b.key])
-    {
-      dirty[playerId] = true;
-      b.heldTime += secondFrame;
-      b.axis[playerId] = b.sign * b.heldTime;
-      std::cout << velocityX[playerId] << '\t' << velocityY[playerId] << '\n';
-    }
-    else
-    {
-      b.heldTime = 0.0f; 
-    }
+    velocityX[playerId] = dirX;
+    velocityY[playerId] = dirY;
+
+    dirty[playerId] = true;
   }
+  else
+  {
+    velocityX[playerId] = 0;
+    velocityY[playerId] = 0;
+  }
+
+  std::cout << velocityX[playerId] << '\t' << velocityY[playerId] << '\n';
+
 }

@@ -14,8 +14,9 @@ class World
   public:
     World();
     const RenderStoreResource rendererResourceStore() const; 
-    const RenderObjectPosition readPosition() const;
+    const RenderStoreResource readData() const;
     RenderObjectPosition savePosition() ;
+    RenderVelocity getVelocity();
     const std::vector<bool>& dirtyObject() const { return dirty;};
     uint32_t createObject(Type objectType);
     void velocityUpdate();
@@ -26,6 +27,9 @@ class World
   private:
     float lastFrame;
     float secondFrame;
+    
+    int8_t lastAxisX = 0;
+    int8_t lastAxisY = 0;
     
     float holdtime = 0.0f;
 
