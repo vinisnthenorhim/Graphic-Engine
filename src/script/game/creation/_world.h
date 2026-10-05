@@ -18,7 +18,7 @@ class World
     RenderObjectPosition savePosition() ;
     RenderVelocity getVelocity();
     const std::vector<bool>& dirtyObject() const { return dirty;};
-    uint32_t createObject(Type objectType);
+    void createObject(Type objectType);
     void velocityUpdate();
     // void 
 
@@ -30,10 +30,9 @@ class World
     
     int8_t lastAxisX = 0;
     int8_t lastAxisY = 0;
-    
+
     float holdtime = 0.0f;
 
-    uint32_t id = 0;
     std::vector<Type> type          ;
     std::vector<bool> dirty         ;
 

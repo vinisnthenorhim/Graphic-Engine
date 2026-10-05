@@ -48,13 +48,15 @@ RenderVelocity World::getVelocity()
 {
   return
   {
+    &secondFrame,
+    &dirty,
     &velocityX,
     &velocityY,
     &velocityZ
   };
 }
 
-uint32_t World::createObject(Type objectType)
+void World::createObject(Type objectType)
 {
 
   type.push_back(objectType);
@@ -76,16 +78,14 @@ uint32_t World::createObject(Type objectType)
   velocityY.push_back(0.0f);
   velocityZ.push_back(0.0f);
 
-  speedX.push_back(3.0f)   ;
-  speedY.push_back(3.0f)   ;
+  speedX.push_back(60.0f)   ;
+  speedY.push_back(60.0f)   ;
 
   visible.push_back(true)  ;
   exist.push_back(true)    ;
-  id++;
 
-  std::cout << "Object No: " << id << '\n';
+  std::cout << "Object No: " << type.size() << '\n';
 
-  return id;
 }
 void World::secondPerFrame()
 {
@@ -159,6 +159,6 @@ void World::velocityUpdate( )
     velocityY[playerId] = 0;
   }
 
-  std::cout << velocityX[playerId] << '\t' << velocityY[playerId] << '\n';
+  // std::cout << velocityX[playerId] << '\t' << velocityY[playerId] << '\n';
 
 }

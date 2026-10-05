@@ -23,7 +23,7 @@ public:
         (float)height/2
     );   
   }
-  void updateProjection(GLuint& program)
+  void updateProjection(const GLuint& program)
   {
     int width, height;
     SDL_GetWindowSize(window, &width, &height);

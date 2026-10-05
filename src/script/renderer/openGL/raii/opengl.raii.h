@@ -109,7 +109,7 @@ class SSBO
       GLuint zero = 0;
       glClearBufferData(GL_SHADER_STORAGE_BUFFER, GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, &zero);
     }
-    static void barrier() { glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT); }
+    static void barrier() { glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT); }
     GLuint id() const { return SSBOid; }
     SSBO(const SSBO&) = delete;
     SSBO& operator=(const SSBO&) = delete;
@@ -124,6 +124,7 @@ class SSBO
           glDeleteBuffers(1, &SSBOid);   // free the buffer I currently own
           SSBOid = o.SSBOid;             // take theirs
           binding = o.binding;
+          lastSize = o.lastSize;
           o.SSBOid = 0;  
           o.lastSize = 0;                // they now own nothing
       }
@@ -176,6 +177,7 @@ class Shader
             return buffer.str();
         }
 };
+
 class ShaderProgram
 {
   public:
@@ -190,24 +192,25 @@ class ShaderProgram
         Shader fragShader(GL_FRAGMENT_SHADER, fragPath);
         link(&vertShader, &fragShader);
       }
-      ~ShaderProgram() {  glDeleteProgram(program);  }
+      const GLuint program() const { return progID; }
+      ~ShaderProgram() {  glDeleteProgram(progID);  }
       ShaderProgram(const ShaderProgram&) = delete;
       ShaderProgram& operator=(const ShaderProgram&) = delete;
-      void bind()  {  glUseProgram(program); }
+      void bind()  {  glUseProgram(progID); }
   private:
-    GLuint program;
+    GLuint progID;
     void link( const Shader* vertex, const Shader* fragment)
     {
-      program = glCreateProgram();
-      glAttachShader(program, vertex->id());
-      if ( fragment ) glAttachShader(program, fragment->id());
-      glLinkProgram(program);
+      progID = glCreateProgram();
+      glAttachShader(progID, vertex->id());
+      if ( fragment ) glAttachShader(progID, fragment->id());
+      glLinkProgram(progID);
       GLint success;
-      glGetProgramiv(program, GL_LINK_STATUS, &success);
+      glGetProgramiv(progID, GL_LINK_STATUS, &success);
       if (!success)
       {
         char infoLog[512];
-        glGetProgramInfoLog(program, 512, NULL, infoLog);
+        glGetProgramInfoLog(progID, 512, NULL, infoLog);
         std::cout << "[SHADER LINK ERROR] " << infoLog << "\n";
       }
     }
@@ -221,28 +224,28 @@ class ComputeProgram
       Shader shader(GL_COMPUTE_SHADER, path);
       link(&shader);
     }
-    ~ComputeProgram() {  glDeleteProgram(program);  }
+    const GLuint program() const { return programID; }
+    ~ComputeProgram() {  glDeleteProgram(programID);  }
     ComputeProgram(const ComputeProgram&) = delete;
     ComputeProgram& operator=(const ComputeProgram&) = delete;
-    void bind()  {  glUseProgram(program); }
+    void bind()  {  glUseProgram(programID); }
   private:
-    GLuint program;
+    GLuint programID;
     void link( const Shader* compute)
     {
-      program = glCreateProgram();
-      glAttachShader(program, compute->id());
-      glLinkProgram(program);
+      programID = glCreateProgram();
+      glAttachShader(programID, compute->id());
+      glLinkProgram(programID);
       GLint success;
-      glGetProgramiv(program, GL_LINK_STATUS, &success);
+      glGetProgramiv(programID, GL_LINK_STATUS, &success);
       if (!success)
       {
           char infoLog[512];
-          glGetProgramInfoLog(program, 512, NULL, infoLog);
+          glGetProgramInfoLog(programID, 512, NULL, infoLog);
           std::cout << "[SHADER LINK ERROR] " << infoLog << "\n";
       }
     }
 };
-
 class Texture
 {
 public:

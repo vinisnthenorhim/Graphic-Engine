@@ -40,6 +40,9 @@ struct RenderObjectPosition
 };
 struct RenderVelocity
 {
+  float* secondFrame;
+  std::vector<bool>*  dirty         ;
+
   std::vector<float>* velocityX    ;
   std::vector<float>* velocityY    ;
   std::vector<float>* velocityZ    ;

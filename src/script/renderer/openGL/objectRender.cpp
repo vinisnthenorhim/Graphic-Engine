@@ -63,9 +63,12 @@ void ObjectRender::resourceLoad(const RenderStoreResource resource)
 
 void ObjectRender::render()
 {
-  
+  glClearColor( 0.0f, 0.1f, 0.2f, 0.2f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
+  int objectQuantity = visible->size();
   vao.bind();                 
-  glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, 3);
+  glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, objectQuantity);
   vao.unbind();
 
 }

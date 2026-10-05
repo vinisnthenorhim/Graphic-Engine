@@ -18,9 +18,9 @@ void Renderer::screenUpdate(const SDL_Event* event)
     GlRenderer.screenUpdate();
   }
 }
-void Renderer::resourceDataLoad(const RenderStoreResource resource)
+void Renderer::resourceDataLoad(const RenderStoreResource& resource, RenderObjectPosition objectPosition, RenderVelocity objectVelocity)
 {
-  GlRenderer.resourceDataLoad(resource);
+  GlRenderer.resourceDataLoad(resource, objectPosition, objectVelocity);
 }
 
 bool Renderer::render()

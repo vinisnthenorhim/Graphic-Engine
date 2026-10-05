@@ -8,7 +8,7 @@ class Renderer
     public:
         Renderer(SDL_Window* window);
         ~Renderer();
-        void resourceDataLoad(const RenderStoreResource resource);
+        void resourceDataLoad(const RenderStoreResource& resource, RenderObjectPosition objectPosition, RenderVelocity objectVelocity);
 
         void screenUpdate(const SDL_Event* event);
         bool render();

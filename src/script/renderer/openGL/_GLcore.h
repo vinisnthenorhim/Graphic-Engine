@@ -6,6 +6,7 @@
 #include "projection.h"
 #include "context.h"
 #include "objectRender.h"
+#include <opengl/compute/compute.h>
 #include <random>
 
 class GLRenderer
@@ -13,12 +14,13 @@ class GLRenderer
   public:
     GLRenderer(SDL_Window* window);
     ~GLRenderer();
-    void resourceDataLoad(const RenderStoreResource resource);
+    void resourceDataLoad(const RenderStoreResource& resource, RenderObjectPosition objectPosition, RenderVelocity objectVelocity);
     void screenUpdate();
     void render();
   private:
 
     GlContext context;
+    Compute compute;
     ShaderProgram program;
     Projection projection;
     ObjectRender objectRender;
