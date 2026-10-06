@@ -78,7 +78,7 @@ void World::createObject(Type objectType)
   velocityY.push_back(0.0f);
   velocityZ.push_back(0.0f);
 
-  speedX.push_back(60.0f)   ;
+  speedX.push_back(200.0f)   ;
   speedY.push_back(60.0f)   ;
 
   visible.push_back(true)  ;
@@ -145,6 +145,8 @@ void World::velocityUpdate( )
 
   const float dirX = newVelocityX * speedX[playerId];
   const float dirY = newVelocityY * speedY[playerId];
+
+  // std::cout << dirX << '\t' << dirY << '\n';
 
   if (velocityX[playerId] != newVelocityX || velocityY[playerId] != newVelocityY || velocityX[playerId] != 0 || velocityY[playerId] != 0)
   {

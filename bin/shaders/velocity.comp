@@ -1,0 +1,37 @@
+#version 460
+layout(local_size_x = 64) in;
+
+#define POSITION_BINDING     0
+#define VELOCITY_X_BINDING   1
+#define VELOCITY_Y_BINDING   2
+#define VELOCITY_Z_BINDING   3
+#define MODEL_MATRIX_BINDING 4
+
+layout(std430, binding = POSITION_BINDING)     buffer           PositionBuffer    { vec4 positions[];     };
+layout(std430, binding = VELOCITY_X_BINDING)   readonly buffer  VelocityXBuffer   { float velocityX[];    };
+layout(std430, binding = VELOCITY_Y_BINDING)   readonly buffer  VelocityYBuffer   { float velocityY[];    };
+layout(std430, binding = VELOCITY_Z_BINDING)   readonly buffer  VelocityZBuffer   { float velocityZ[];    };
+layout(std430, binding = MODEL_MATRIX_BINDING) writeonly buffer ModelMatrixBuffer { mat4 modelMatrices[]; };
+
+uniform float deltaTime;
+uniform uint  entityCount;
+
+mat4 translationMatrix(vec3 offset)
+{
+  return mat4(1.0, 0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0, 0.0,
+              0.0, 0.0, 1.0, 0.0,
+              offset.x, offset.y, offset.z, 1.0);
+}
+
+void main()
+{
+  uint entityIndex = gl_GlobalInvocationID.x;
+  if (entityIndex >= entityCount) return;
+
+  positions[entityIndex].x += velocityX[entityIndex] * deltaTime;
+  positions[entityIndex].y += velocityY[entityIndex] * deltaTime;
+  positions[entityIndex].z += velocityZ[entityIndex] * deltaTime;
+
+  modelMatrices[entityIndex] = translationMatrix(positions[entityIndex].xyz);
+}

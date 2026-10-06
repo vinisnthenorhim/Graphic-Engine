@@ -103,6 +103,32 @@ class SSBO
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, currentSize, vertices.data());
       }
     }
+    void resize(GLsizeiptr bytes)
+    {
+      if (bytes <= lastSize) return;
+
+      GLuint newID = 0;
+      glGenBuffers(1, &newID);
+      glBindBuffer(GL_COPY_WRITE_BUFFER, newID);
+      glBufferData(GL_COPY_WRITE_BUFFER, bytes, nullptr, GL_DYNAMIC_COPY);
+
+      GLuint zero = 0;
+      glClearBufferData(GL_COPY_WRITE_BUFFER, GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_INT, &zero);
+
+      if (lastSize > 0)
+      {
+        glBindBuffer(GL_COPY_READ_BUFFER, SSBOid);
+        glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, lastSize);
+      }
+
+      glDeleteBuffers(1, &SSBOid);
+
+      SSBOid = newID;
+      lastSize = bytes;
+
+      glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, SSBOid);
+      std::cout << "[OPENGL] SSBO resize" << '\n';
+    }
     void clear()
     {
       bind();
