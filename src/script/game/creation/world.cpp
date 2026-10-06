@@ -78,8 +78,8 @@ void World::createObject(Type objectType)
   velocityY.push_back(0.0f);
   velocityZ.push_back(0.0f);
 
-  speedX.push_back(200.0f)   ;
-  speedY.push_back(60.0f)   ;
+  speedX.push_back(600.0f)   ;
+  speedY.push_back(600.0f)   ;
 
   visible.push_back(true)  ;
   exist.push_back(true)    ;
