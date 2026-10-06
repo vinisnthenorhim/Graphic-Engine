@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 add_subdirectory(include/SDL3 EXCLUDE_FROM_ALL)
+add_subdirectory(include/glm EXCLUDE_FROM_ALL)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp" )
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS "src/*.h"   )
@@ -37,6 +38,7 @@ target_link_libraries(${PROJECT_NAME}
     SDL3::SDL3
     glad
     opengl32
+    glm::glm
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
